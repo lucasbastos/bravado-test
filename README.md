@@ -1,11 +1,25 @@
 # Bravado - Frontend Technical Assessment
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+To execute this project, simple run `yarn` or `npm i` to install all dependencies. Once finished installing, run `yarn dev` or `npm run dev` to run locally
 
-## Recommended IDE Setup
+## Stack and tools used
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+- [VSCode](https://code.visualstudio.com/)
+- [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+- [Vue 3](https://vuejs.org/)
+- [Vite](https://vitejs.dev/)
+- [Typescript](https://www.typescriptlang.org/)
+- [SCSS](https://sass-lang.com/)
+- [Pinia](https://pinia.vuejs.org/)
+- [Vue Router](https://router.vuejs.org/)
 
-## Type Support For `.vue` Imports in TS
+## How I made it
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+First, I mocked some users info and created a static version of the page, focusing on the styling and the behaviour. Then I created a service to fetch the users in the `users.json` file, so the store can the filled.
+After that, I created a route to search by the parameter in the url.
+The last thing was to create a SFC to handle the search text highlighting, so the user could type anything (with a debounce effect, so the server isn't overloaded with requests) and the matches will highlight on the screen.
+
+## What could be improved
+
+- Because of the inconstancy of the strings sizes in the json file, the styling is a little bit off.
+- Testing is a must. I had to cut it off due to problems with the build for production
