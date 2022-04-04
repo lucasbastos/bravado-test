@@ -1,55 +1,97 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useUsersStore } from './store';
+  import { ref, onMounted, watch } from "vue";
+  import { useUsersStore } from "./store";
+  import Card from "./components/Card.vue";
+  import { useRoute } from "vue-router";
 
-const mockData = ref();
-onMounted(() => {
-  mockData.value = useUsersStore().users;
-})
+  const mockData = ref();
+  onMounted(async () => {
+    mockData.value = await useUsersStore().fetchUsers(0);
+  });
+  const query = ref("");
+  const route = useRoute();
 
+  watch(
+    () => route.params.query,
+    async (value) => {
+      const filteredUsers = await useUsersStore().fetchFilteredUsers(
+        value as string
+      );
+      mockData.value = filteredUsers;
+    }
+  );
+
+  async function fetchMoreUsers() {
+    if (!route.params.query) {
+      const { scrollTop, scrollHeight, clientHeight } = document.querySelector(
+        ".container"
+      ) as Element;
+      if (scrollTop + clientHeight >= scrollHeight) {
+        const moreUsers = await useUsersStore().fetchUsers(
+          mockData.value.length
+        );
+        mockData.value = [...mockData.value, ...moreUsers];
+      }
+    }
+  }
 </script>
 
 <template>
-  <section class="container">
-    <input type="text">
+  <section class="container" v-on:scroll="fetchMoreUsers">
+    <div class="container__search">
+      <input type="text" v-model="query" />
+      <img src="./assets/seach-icon.svg" alt="" />
+    </div>
     <div class="container__content">
       <div class="container__card" v-for="data in mockData" :key="data.name">
-      <img :src="data.avatar" :alt="data.name">
-      <h3>{{ data.name }}</h3>
-      <p>{{ data.title }}</p>
-      <p>{{ data.city }}</p>
-      <p>{{ data.address }}</p>
-      <p>{{ data.email }}</p>
+        <Card :user="data" :query="query" />
       </div>
     </div>
   </section>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
-body {
-  background-color: #EEEEEE;
-}
-.container {
-  margin: 0 auto;
-  width: 960px;
-  height: 90vh;
-  background-color: #FFFF
-}
-.container__card {
-  background-color: #FAFAFA;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
-  display: flex;
-  margin: 16px;
-  padding: 16px;
-  width: 800px;
-  height: 200px;
-}
-.container__content {
-  height:85vh;
-  overflow:auto;
-}
+<style lang="scss">
+  .container__search {
+    position: relative;
+    input {
+      padding-left: 4rem;
+      width: 458px;
+      height: 48px;
+      font-weight: 400;
+      font-size: 24px;
+      line-height: 28px;
+      color: rgba(0, 0, 0, 0.75);
+    }
+    img {
+      position: absolute;
+      pointer-events: none;
+      top: 2rem;
+      left: 1.5rem;
+      width: 2rem;
+    }
+  }
+  #app {
+    font-family: "Roboto", sans-serif;
+  }
+  body {
+    background-color: #eeeeee;
+  }
+  input {
+    width: 40vw;
+    height: 48px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    background: #fafafa;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12), 0px 2px 2px rgba(0, 0, 0, 0.24);
+    border-radius: 2px;
+  }
+  .container {
+    margin: 0 auto;
+    width: 564px;
+    height: 643px;
+    background-color: #ffff;
+    overflow: auto;
+    padding: 12px;
+  }
 </style>
