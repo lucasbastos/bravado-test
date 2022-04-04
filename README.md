@@ -20,4 +20,5 @@ First, I mocked some users' info and created a static version of the page, focus
 ## What could be improved
 
 - Because of the inconstancy of the sizes of the strings in the JSON file, the styling is a little bit off.
-- Testing is a must. I had to cut it off due to problems with the build for production
+- Testing is a must. I had to cut it off due to problems with the build for production.
+- Use the [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/) to break down the components into small pieces and increase the reusability.
