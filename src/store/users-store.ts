@@ -17,10 +17,6 @@ export const useUsersStore = defineStore('users-store', {
     },
     async fetchFilteredUsers(query: string) {
       const users = await fetchUsersFilteredService(query);
-      for (const user of users) {
-        const userParsed = {...user, status: false};
-        this.users.push(userParsed);
-      }
       return users;
     }
   }
